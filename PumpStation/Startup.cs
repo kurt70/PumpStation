@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PumpStation.Managers;
+using PumpStation.Misc;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace PumpStation
@@ -41,15 +44,27 @@ namespace PumpStation
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseHttpStatusCodeExceptionMiddleware();
             }
-
+            else
+            {
+                app.UseHttpStatusCodeExceptionMiddleware();
+            }
             app.UseMvc();
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
+            var swaggerEndpoint = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ?
+                "/pumpstation/swagger/v1/swagger.json" : "/swagger/v1/swagger.json";
+
             app.UseSwagger();
             app.UseSwaggerUI(
             c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+                c.SwaggerEndpoint("v1/swagger.json", "API V1");
+                c.SwaggerEndpoint("/pumpstation/swagger/v1/swagger.json", "Deployed API V1");
+            });            
         }
     }
 }

@@ -1,9 +1,6 @@
-﻿using PumpStation.ApiModels;
-using PumpStation.Repositories;
+﻿using CommonContracts;
+using PumpStation.ApiModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PumpStation.Managers
 {
@@ -13,11 +10,11 @@ namespace PumpStation.Managers
     }
     public class WaterLevelManager : IWaterLevelManager
     {
-        private IGPIORepository _gpioRpository;
+        private IHardwareAbstractionLayer _hal;
 
-        public WaterLevelManager(IGPIORepository gpioRpository)
+        public WaterLevelManager(IHardwareAbstractionLayer hal)
         {
-            _gpioRpository = gpioRpository ?? throw new ArgumentException(nameof(gpioRpository));
+            _hal = hal ?? throw new ArgumentException(nameof(hal));
         }
         public WaterLevel GetWaterLevel()
         {

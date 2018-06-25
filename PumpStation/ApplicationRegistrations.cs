@@ -1,12 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using PumpStation.BackgroundWorkers;
+﻿using CommonContracts;
+using Microsoft.Extensions.DependencyInjection;
 using PumpStation.Managers;
-using PumpStation.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using RasberryPiHAL;
 
 namespace PumpStation
 {
@@ -16,10 +11,10 @@ namespace PumpStation
         {
             services.AddTransient<IPumpManager, PumpManager>();
             services.AddTransient<IWaterLevelManager, WaterLevelManager>();
-            services.AddTransient<IGPIORepository, GPIORepository>();
-            services.AddSingleton<IHostedService, TimedBW>();
+            services.AddSingleton<IHardwareAbstractionLayer, RasberryAbstractionLayer>();
 
             return services;
         }
     }
 }
+
