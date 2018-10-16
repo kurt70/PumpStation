@@ -4,7 +4,7 @@ EXPOSE 80
 
 FROM microsoft/aspnetcore-build:2.0 AS build
 WORKDIR /src
-COPY PumpStation.sln ./
+COPY ../PumpStation.sln ./
 COPY PumpStation/PumpStation.csproj PumpStation/
 COPY RasberryPiHAL/RasberryPiHAL.csproj RasberryPiHAL/
 COPY CommonContracts/CommonContracts.csproj CommonContracts/
