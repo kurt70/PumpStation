@@ -9,9 +9,9 @@ namespace PumpStation
     {
         public static IServiceCollection AddApplicationRegistrations(this IServiceCollection services)
         {
-            services.AddTransient<IPumpManager, PumpManager>();
-            services.AddTransient<IWaterLevelManager, WaterLevelManager>();
-            services.AddSingleton<IHardwareAbstractionLayer, RasberryAbstractionLayer>();
+            services.AddScoped<IPumpManager, PumpManager>();
+            services.AddScoped<IWaterLevelManager, WaterLevelManager>();
+            //services.AddScoped<IHardwareAbstractionLayer , RasberryAbstractionLayer>();
 
             return services;
         }
