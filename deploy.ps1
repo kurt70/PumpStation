@@ -1,5 +1,5 @@
-﻿cd C:\Users\Admin\Source\Repos\PumpStation\PumpStation
-dotnet publish -r linux-arm
-rem cd C:\Users\Admin\Source\Repos\PumpStation\PumpStation\bin\Debug\netcoreapp2.0\linux-arm\publish
-rem psftp -pw bsdit001 pi@10.0.0.195 -b C:\Users\Admin\Source\Repos\PumpStation\PumpStation\transfercmds.txt -bc
-cd C:\Users\Admin\Source\Repos\PumpStation\PumpStation
+﻿docker build -t kurtmonge/pumpstation:4 .
+docker push kurtmonge/pumpstation:4
+Echo "Use the following on the host system:"
+Echo "docker pull kurtmonge/pumpstation:4"
+Echo "docker run -p 8888:5000 kurtmonge/pumpstation:4"

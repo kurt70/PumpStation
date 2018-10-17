@@ -1,6 +1,6 @@
 FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
 WORKDIR /app
-EXPOSE 80
+EXPOSE 8888
 
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
@@ -20,5 +20,5 @@ RUN dotnet publish -c Release -o /app -r linux-arm
 FROM microsoft/dotnet:2.1.5-runtime-stretch-slim-arm32v7 AS runtime
 WORKDIR /app
 COPY --from=publish /app .
-EXPOSE 5000-5001
-ENTRYPOINT ["dotnet", "PumpStation.dll", "--urls", "http://0.0.0.0:5000"]
+EXPOSE 8888
+ENTRYPOINT ["dotnet", "PumpStation.dll", "--urls", "http://0.0.0.0:8888"]
