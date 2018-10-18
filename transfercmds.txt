@@ -1,5 +1,0 @@
-cd /home/pi/pumpstation
-rm *
-lcd C:\Users\Admin\Source\Repos\PumpStation\PumpStation\bin\Debug\netcoreapp2.0\linux-arm\publish
-mput * -r
-quit
