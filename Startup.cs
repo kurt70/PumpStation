@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Hangfire;
+using Hangfire.Console;
+using Hangfire.Heartbeat;
+using Hangfire.Heartbeat.Server;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -35,6 +40,13 @@ namespace PumpStation
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
 
+            services.AddHangfire(config=> 
+            {
+                config.UseStorage(new MemoryStorage());
+                config.UseConsole(new ConsoleOptions());
+                config.UseHeartbeatPage(new TimeSpan(0, 0, 5));
+            });
+            
             services.AddApplicationRegistrations();            
         }
 
@@ -54,9 +66,7 @@ namespace PumpStation
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.All
-            });
-            var swaggerEndpoint = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ?
-                "/pumpstation/swagger/v1/swagger.json" : "/swagger/v1/swagger.json";
+            });            
 
             app.UseSwagger();
             app.UseSwaggerUI(
@@ -64,7 +74,15 @@ namespace PumpStation
             {
                 c.SwaggerEndpoint("v1/swagger.json", "API V1");
                 c.SwaggerEndpoint("/pumpstation/swagger/v1/swagger.json", "Deployed API V1");
-            });            
+            });
+            app.UseHangfireServer(new BackgroundJobServerOptions
+            {   
+                HeartbeatInterval = new System.TimeSpan(0, 1, 0),
+                ServerCheckInterval = new System.TimeSpan(0, 1, 0),
+                SchedulePollingInterval = new System.TimeSpan(0, 1, 0)
+            });
+            app.UseHangfireDashboard();
+            app.UseHangfireServer(additionalProcesses: new[] { new SystemMonitor(new TimeSpan(0, 0, 5)) });
         }
     }
 }
